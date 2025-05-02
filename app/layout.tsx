@@ -4,6 +4,7 @@ import './globals.css'
 import { ThemeProvider } from '@/src/app/providers/theme-provider'
 import { Header } from '@/src/widgets'
 import Link from 'next/link'
+import { Web3Provider } from '@/src/app/providers/web3-provider'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -26,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className='dark'>
+    <html lang="en" className="dark">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider
           attribute="class"
@@ -37,7 +38,7 @@ export default function RootLayout({
           <div className="relative flex h-screen flex-col">
             <Header />
             <main className="container mx-auto max-w-7xl flex-grow px-6 pt-16">
-              {children}
+              <Web3Provider>{children}</Web3Provider>
             </main>
             <footer className="flex w-full items-center justify-center py-3">
               <Link
