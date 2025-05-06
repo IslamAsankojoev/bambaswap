@@ -29,29 +29,29 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <div className="relative flex h-screen flex-col">
-            <Header />
-            <main className="container mx-auto max-w-7xl flex-grow px-6 pt-16">
-              <Web3Provider>{children}</Web3Provider>
-            </main>
-            <footer className="flex w-full items-center justify-center py-3">
-              <Link
-                className="flex items-center gap-1 text-current"
-                href="https://heroui.com?utm_source=next-app-template"
-                title="heroui.com homepage"
-              >
-                <span className="text-default-600">Powered by</span>
-                <p className="text-primary">HeroUI</p>
-              </Link>
-            </footer>
-          </div>
-        </ThemeProvider>
+        <Web3Provider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <div className="relative flex h-screen flex-col">
+              <Header />
+              <main className="container mx-auto max-w-7xl flex-grow px-6 pt-16">{children}</main>
+              <footer className="flex w-full items-center justify-center py-3">
+                <Link
+                  className="flex items-center gap-1 text-current"
+                  href="https://heroui.com?utm_source=next-app-template"
+                  title="heroui.com homepage"
+                >
+                  <span className="text-default-600">Powered by</span>
+                  <p className="text-primary">HeroUI</p>
+                </Link>
+              </footer>
+            </div>
+          </ThemeProvider>
+        </Web3Provider>
         <div id="background-radial-gradient" />
       </body>
     </html>

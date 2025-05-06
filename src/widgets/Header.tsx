@@ -14,13 +14,13 @@ import { useWeb3Modal, useWeb3ModalAccount } from '@web3modal/ethers/react'
 export const Header = () => {
   const [open, setOpen] = useState(false)
   const { open: connectWeb3 } = useWeb3Modal()
-  const { address, isConnected, status } = useWeb3ModalAccount()
+  const web3 = useWeb3ModalAccount()
 
   const handleConnect = async () => {
     await connectWeb3()
   }
 
-  console.log(status)
+  console.table(web3) 
 
   return (
     <>
@@ -47,11 +47,11 @@ export const Header = () => {
 
           <div className="flex items-center gap-2">
             <AnimatePresence>
-              {isConnected ? (
+              {web3.isConnected ? (
                 <motion.div className="flex items-center gap-2">
                   <Button variant="secondary" onClick={handleConnect}>
                     <BadgeCheck color="green" />
-                    {address?.slice(0, 6)}...{address?.slice(-4)}
+                    {web3.address?.slice(0, 6)}...{web3.address?.slice(-4)}
                   </Button>
                 </motion.div>
               ) : (

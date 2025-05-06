@@ -1,5 +1,10 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+
+import { ChevronDown } from 'lucide-react'
+import { AnimatePresence, motion } from 'motion/react'
+
 import { useTokens } from '@/src/shared/hooks/useTokens'
 import { Button } from '@/src/shared/shadcn/components/ui/button'
 import {
@@ -11,11 +16,10 @@ import {
 } from '@/src/shared/shadcn/components/ui/dialog'
 import { Input } from '@/src/shared/shadcn/components/ui/input'
 import { ScrollArea } from '@/src/shared/shadcn/components/ui/scroll-area'
-import { AnimatePresence, motion } from 'motion/react'
-import { useEffect, useState } from 'react'
-import { Token } from '../model/types'
 import { Separator } from '@/src/shared/shadcn/components/ui/separator'
-import { ChevronDown } from 'lucide-react'
+
+import { Token } from '../model/types'
+import Image from 'next/image'
 
 interface SwapSelectTokenProps {
   handleToken: (token: Token) => void
@@ -54,10 +58,12 @@ export function SwapSelectToken({ handleToken, token }: SwapSelectTokenProps) {
         <Button variant="outline" className="rounded-sm">
           {token ? (
             <div className="flex items-center gap-2">
-              <img
+              <Image
                 src={token.logoURI}
                 alt={token.name}
-                className="rounded-full bg-white w-6 h-6"
+                width={20}
+                height={20}
+                className="rounded-full bg-white"
               />
               <p>{token.name}</p>
               <ChevronDown />
@@ -67,8 +73,8 @@ export function SwapSelectToken({ handleToken, token }: SwapSelectTokenProps) {
           )}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[350px] border-none p-0 overflow-hidden gap-0">
-        <DialogHeader className="p-4 flex flex-col gap-4">
+      <DialogContent className="gap-0 overflow-hidden border-none p-0 sm:max-w-[350px]">
+        <DialogHeader className="flex flex-col gap-4 p-4">
           <DialogTitle>Select a token</DialogTitle>
           <Input
             value={search}
@@ -79,7 +85,7 @@ export function SwapSelectToken({ handleToken, token }: SwapSelectTokenProps) {
         <Separator className="bg-neutral-900" />
         <div className="grid gap-4">
           <ScrollArea className="h-96 overflow-hidden">
-            <div className="overflow-hidden flex flex-col gap-2">
+            <div className="flex flex-col gap-2 overflow-hidden">
               <AnimatePresence>
                 {filteredTokens.map((token, index) => {
                   const address = `${token.address.slice(0, 6)}...${token.address.slice(-4)}`
@@ -90,7 +96,7 @@ export function SwapSelectToken({ handleToken, token }: SwapSelectTokenProps) {
                       initial={{ opacity: 0 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.2 }}
-                      className="flex items-center gap-2 p-2 px-4 cursor-pointer hover:bg-purple-950/30"
+                      className="flex cursor-pointer items-center gap-2 p-2 px-4 hover:bg-purple-950/30"
                       onClick={() => {
                         handleToken(token)
                         setOpen(false)
@@ -98,15 +104,20 @@ export function SwapSelectToken({ handleToken, token }: SwapSelectTokenProps) {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
-                      <img
-                        src={token.logoURI}
+                      <Image
+                        src={token.logoURI.includes('https://') ? token.logoURI : ''}
                         alt={token.name}
-                        className="rounded-full bg-white w-10 h-10"
+                        width={30}
+                        height={30}
+                        className="rounded-full bg-white"
                       />
                       <div className="flex flex-col">
                         <p>{token.name}</p>
                         <p className="text-xs">
-                          {token.symbol} <span className="text-muted-foreground">{address}</span>
+                          {token.symbol}{' '}
+                          <span className="text-muted-foreground">
+                            {address}
+                          </span>
                         </p>
                       </div>
                     </motion.div>

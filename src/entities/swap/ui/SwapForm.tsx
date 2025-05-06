@@ -1,43 +1,28 @@
 'use client'
 
-import { L1_CHAIN_IDS } from '@/src/shared/constants/chains'
-import { getChainInfo } from '@/src/shared/lib/chainInfo'
-import { Button } from '@/src/shared/shadcn/components/ui/button'
-import { Card } from '@/src/shared/shadcn/components/ui/card'
-import { Input } from '@/src/shared/shadcn/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/src/shared/shadcn/components/ui/select'
-import { ArrowDownUp } from 'lucide-react'
-import Image from 'next/image'
-import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { SwapSelectToken } from './SwapSelectToken'
-import { Token } from '../model/types'
+import { useEffect, useState } from 'react'
 
-export const animals = [
-  { key: 'cat', label: 'Cat' },
-  { key: 'dog', label: 'Dog' },
-  { key: 'elephant', label: 'Elephant' },
-  { key: 'lion', label: 'Lion' },
-  { key: 'tiger', label: 'Tiger' },
-  { key: 'giraffe', label: 'Giraffe' },
-  { key: 'dolphin', label: 'Dolphin' },
-  { key: 'penguin', label: 'Penguin' },
-  { key: 'zebra', label: 'Zebra' },
-  { key: 'shark', label: 'Shark' },
-  { key: 'whale', label: 'Whale' },
-  { key: 'otter', label: 'Otter' },
-  { key: 'crocodile', label: 'Crocodile' },
-]
+import { FormProvider, useForm } from 'react-hook-form'
+import { z } from 'zod'
+
+import { L1_CHAIN_IDS } from '@/src/shared/constants/chains'
+import { Card } from '@/src/shared/shadcn/components/ui/card'
+
+import { swapFormScheme } from '../model/scheme'
+import { Confirm } from './Confirm'
+import { Review } from './Review'
+import { Swap } from './Swap'
+
+export enum SwapSteps {
+  SWAP = 0,
+  REVIEW = 1,
+  CONFIRM = 2,
+  SUCCESS = 3,
+}
 
 export const SwapForm = () => {
-  const form = useForm({
+  const [step, setStep] = useState<SwapSteps>(SwapSteps.SWAP)
+  const form = useForm<z.infer<typeof swapFormScheme>>({
     defaultValues: {
       chain: L1_CHAIN_IDS[0],
       you_pay_token: undefined,
@@ -47,78 +32,21 @@ export const SwapForm = () => {
     },
   })
 
-  const handleSetPayToken = (token: Token) => {
-    form.setValue('you_pay_token', token)
-  }
-
-  const handleSetReceiveToken = (token: Token) => {
-    form.setValue('you_receive_token', token)
-  }
-
-  const handleSwapTokens = () => {
-    const youPayToken = form.getValues('you_pay_token')
-    const youReceiveToken = form.getValues('you_receive_token')
-    const youPayAmount = form.getValues('you_pay_amount')
-    const youReceiveAmount = form.getValues('you_receive_amount')
-    if (youPayToken && youReceiveToken) {
-      form.setValue('you_pay_token', youReceiveToken)
-      form.setValue('you_receive_token', youPayToken)
-      form.setValue('you_pay_amount', youReceiveAmount)
-      form.setValue('you_receive_amount', youPayAmount)
-    }
+  const handleStep = (step: SwapSteps) => {
+    setStep(step)
   }
 
   useEffect(() => {
-    console.log('form', form.watch('chain'))
-  }, [form])
+    console.log('step', step)
+  }, [step])
 
   return (
-    <Card className="w-full p-6 shadow-md min-w-lg border-none">
-      <Select {...form.register('chain')}>
-        <SelectTrigger className="py-6">
-          <SelectValue placeholder="Выберите сеть" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            {L1_CHAIN_IDS.map((chainId) => {
-              const chainInfo = getChainInfo(chainId)
-              return (
-                <SelectItem key={chainId} value={chainId.toString()}>
-                  <div className="flex gap-2 items-center">
-                    <Image
-                      width={20}
-                      height={20}
-                      src={chainInfo.circleLogoUrl || chainInfo.defaultListUrl || chainInfo.logoUrl}
-                      alt="chain-logo"
-                    />
-                    <p>{chainInfo.label}</p>
-                  </div>
-                </SelectItem>
-              )
-            })}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-      <div className="flex relative items-center gap-2">
-        <Input className="py-6" {...form.register('you_pay_amount')} />
-        <div className="absolute top-0 right-0 h-full mr-2 flex items-center justify-center">
-          <SwapSelectToken handleToken={handleSetPayToken} token={form.watch('you_pay_token')!} />
-        </div>
-      </div>
-      <div className="flex justify-center">
-        <Button size="icon" className="rounded-full" onClick={handleSwapTokens}>
-          <ArrowDownUp />
-        </Button>
-      </div>
-      <div className="flex relative items-center gap-2">
-        <Input className="py-6" {...form.register('you_receive_amount')} />
-        <div className="absolute top-0 right-0 h-full mr-2 flex items-center justify-center">
-          <SwapSelectToken
-            handleToken={handleSetReceiveToken}
-            token={form.watch('you_receive_token')!}
-          />
-        </div>
-      </div>
+    <Card className="w-full max-w-lg border-none p-6 py-10 shadow-md">
+      <FormProvider {...form}>
+        {step === SwapSteps.SWAP && <Swap handleStep={handleStep} />}
+        {(step === SwapSteps.REVIEW || step === SwapSteps.CONFIRM) && <Review handleStep={handleStep} />}
+        {step === SwapSteps.CONFIRM && <Confirm handleStep={handleStep} openModal />}
+      </FormProvider>
     </Card>
   )
 }

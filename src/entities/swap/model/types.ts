@@ -6,6 +6,14 @@ export interface Token {
   decimals: number
   logoURI: string
   extensions: {
-    bridgeInfo: unknown
+    bridgeInfo: BridgeInfo
   }
+}
+
+type BridgeInfo = {
+  [chainId: string]:
+    | {
+        tokenAddress: string
+      }
+    | undefined
 }
