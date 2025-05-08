@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from 'react'
 
 import { ArrowUpDown, Check, MoveRight } from 'lucide-react'
@@ -15,7 +16,6 @@ import { Separator } from '@/src/shared/shadcn/components/ui/separator'
 import { swapFormScheme } from '../model/scheme'
 import { SwapSteps } from './SwapForm'
 import { Button } from '@/src/shared/shadcn/components/ui/button'
-import Image from 'next/image'
 
 interface ConfirmProps {
   openModal?: boolean
@@ -67,7 +67,7 @@ export const Confirm = ({ handleStep, openModal }: ConfirmProps) => {
                     {form.watch('you_pay_amount') * 100} USD
                   </p>
                   <div className="absolute top-0 right-0 mr-4 flex h-full items-center justify-center">
-                    <Image
+                    <img
                       src={form.watch('you_pay_token.logoURI')}
                       alt="token logo"
                       width={20}
@@ -93,7 +93,7 @@ export const Confirm = ({ handleStep, openModal }: ConfirmProps) => {
                     {form.watch('you_receive_amount') * 100} USD
                   </p>
                   <div className="absolute top-0 right-0 mr-4 flex h-full items-center justify-center">
-                    <Image
+                    <img
                       src={form.watch('you_receive_token.logoURI')}
                       alt="token logo"
                       width={20}
@@ -155,7 +155,7 @@ export const Confirm = ({ handleStep, openModal }: ConfirmProps) => {
             <h2 className="text-4xl font-bold">Swap Success!</h2>
             <div className="flex gap-2">
               <div className="flex gap-2">
-                <Image
+                <img
                   src={form.watch('you_pay_token.logoURI')}
                   alt="pay token"
                   width={20}
@@ -169,7 +169,7 @@ export const Confirm = ({ handleStep, openModal }: ConfirmProps) => {
               </div>
               <MoveRight />
               <div className="flex gap-2">
-                <Image
+                <img
                   src={form.watch('you_receive_token.logoURI')}
                   alt="receive token"
                   width={20}

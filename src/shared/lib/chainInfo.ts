@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import bnbCircleLogoUrl from '@/public/assets/images/bnbCircle.svg'
 import ethereumLogoUrl from '@/public/assets/images/ethereum-logo.png'
 import lineaLogoUrl from '@/public/assets/images/linea-logo.svg'
@@ -31,9 +32,9 @@ interface BaseChainInfo {
   readonly bridge?: string
   readonly explorer: string
   readonly infoLink: string
-  readonly logoUrl: any
-  readonly circleLogoUrl?: any
-  readonly squareLogoUrl?: any
+  readonly logoUrl: unknown
+  readonly circleLogoUrl?: unknown
+  readonly squareLogoUrl?: unknown
   readonly label: string
   readonly helpCenterUrl?: string
   readonly nativeCurrency: {
@@ -258,8 +259,9 @@ export function getChainInfo(
  * SupportedL1ChainId -> returns L1ChainInfo
  * SupportedL2ChainId -> returns L2ChainInfo
  */
-export function getChainInfo(chainId: any): any {
+export function getChainInfo(chainId: unknown): unknown {
   if (chainId) {
+    //@ts-ignore
     return CHAIN_INFO[chainId] ?? undefined
   }
   return undefined

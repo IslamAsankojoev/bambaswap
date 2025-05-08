@@ -1,7 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 
 import { ArrowDownUp } from 'lucide-react'
-import Image from 'next/image'
 import { useFormContext } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -60,7 +60,10 @@ export const Swap = ({ handleStep }: SwapProps) => {
     <div className="flex flex-col gap-4">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <Label className="ml-2 flex">Выберите сеть</Label>
-        <Select {...form.register('chain')} value={form.watch('chain').toString()}>
+        <Select
+          onValueChange={(value) => form.setValue('chain', Number(value))}
+          value={form.watch('chain').toString()}
+        >
           <SelectTrigger className="py-6">
             <SelectValue placeholder="Выберите" />
           </SelectTrigger>
@@ -68,17 +71,16 @@ export const Swap = ({ handleStep }: SwapProps) => {
             <SelectGroup>
               {L1_CHAIN_IDS.map((chainId) => {
                 const chainInfo = getChainInfo(chainId)
+                const imageUrl = (chainInfo.circleLogoUrl || chainInfo.defaultListUrl || chainInfo.logoUrl || '') as {
+                  src: string
+                }
                 return (
                   <SelectItem key={chainId} value={chainId.toString()}>
                     <div className="flex items-center gap-2">
-                      <Image
+                      <img
+                        src={imageUrl.src}
                         width={20}
                         height={20}
-                        src={
-                          chainInfo.circleLogoUrl ||
-                          chainInfo.defaultListUrl ||
-                          chainInfo.logoUrl
-                        }
                         alt="chain-logo"
                       />
                       <p>{chainInfo.label}</p>

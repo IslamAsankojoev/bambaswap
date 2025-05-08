@@ -20,7 +20,7 @@ export const CHAIN_IDS_TO_NAMES = {
 
 const NOT_YET_UX_SUPPORTED_CHAIN_IDS: number[] = [ChainId.BASE_GOERLI]
 
-export type SupportedInterfaceChain = Exclude<any, ChainId.BASE_GOERLI>
+export type SupportedInterfaceChain = Exclude<number | null | undefined | ChainId, ChainId.BASE_GOERLI>
 
 export function isSupportedChain(chainId: number | null | undefined | ChainId): chainId is SupportedInterfaceChain {
   return !!chainId && SUPPORTED_V2POOL_CHAIN_IDS.indexOf(chainId) !== -1 && NOT_YET_UX_SUPPORTED_CHAIN_IDS.indexOf(chainId) === -1

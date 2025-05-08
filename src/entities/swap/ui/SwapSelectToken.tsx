@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -19,7 +20,6 @@ import { ScrollArea } from '@/src/shared/shadcn/components/ui/scroll-area'
 import { Separator } from '@/src/shared/shadcn/components/ui/separator'
 
 import { Token } from '../model/types'
-import Image from 'next/image'
 
 interface SwapSelectTokenProps {
   handleToken: (token: Token) => void
@@ -58,7 +58,7 @@ export function SwapSelectToken({ handleToken, token }: SwapSelectTokenProps) {
         <Button variant="outline" className="rounded-sm">
           {token ? (
             <div className="flex items-center gap-2">
-              <Image
+              <img
                 src={token.logoURI}
                 alt={token.name}
                 width={20}
@@ -104,7 +104,7 @@ export function SwapSelectToken({ handleToken, token }: SwapSelectTokenProps) {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
-                      <Image
+                      <img
                         src={token.logoURI.includes('https://') ? token.logoURI : ''}
                         alt={token.name}
                         width={30}

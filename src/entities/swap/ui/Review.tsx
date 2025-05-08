@@ -1,6 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 
-import Image from 'next/image'
 import { useFormContext } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -38,7 +38,7 @@ export const Review = ({ handleStep }: ReviewProps) => {
       <h2 className="text-2xl font-bold">Review swap</h2>
       <div className="flex flex-col gap-4">
         <Select
-          {...form.register('chain')}
+          onValueChange={(value) => form.setValue('chain', Number(value))}
           value={form.watch('chain').toString()}
         >
           <SelectTrigger className="py-6">
@@ -48,17 +48,16 @@ export const Review = ({ handleStep }: ReviewProps) => {
             <SelectGroup>
               {L1_CHAIN_IDS.map((chainId) => {
                 const chainInfo = getChainInfo(chainId)
+                const imageUrl = (chainInfo.circleLogoUrl || chainInfo.defaultListUrl || chainInfo.logoUrl || '')  as {
+                  src: string
+                }
                 return (
                   <SelectItem key={chainId} value={chainId.toString()}>
                     <div className="flex items-center gap-2">
-                      <Image
+                      <img
                         width={20}
                         height={20}
-                        src={
-                          chainInfo.circleLogoUrl ||
-                          chainInfo.defaultListUrl ||
-                          chainInfo.logoUrl
-                        }
+                        src={imageUrl.src}
                         alt="chain-logo"
                       />
                       <p>{chainInfo.label}</p>
@@ -85,7 +84,7 @@ export const Review = ({ handleStep }: ReviewProps) => {
               {form.watch('you_pay_amount') * 100} USD
             </p>
             <div className="absolute top-0 right-0 mr-4 flex h-full items-center justify-center">
-              <Image
+              <img
                 src={form.watch('you_pay_token.logoURI')}
                 alt="token logo"
                 width={30}
@@ -111,7 +110,7 @@ export const Review = ({ handleStep }: ReviewProps) => {
               {form.watch('you_receive_amount') * 100} USD
             </p>
             <div className="absolute top-0 right-0 mr-4 flex h-full items-center justify-center">
-              <Image
+              <img
                 src={form.watch('you_receive_token.logoURI')}
                 alt="token logo"
                 width={30}
