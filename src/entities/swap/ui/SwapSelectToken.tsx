@@ -21,12 +21,15 @@ import { Separator } from '@/src/shared/shadcn/components/ui/separator'
 
 import { Token } from '../model/types'
 
+/* eslint-disable @next/next/no-img-element */
+
 interface SwapSelectTokenProps {
   handleToken: (token: Token) => void
   token?: Token
+  chevron?: React.ReactNode
 }
 
-export function SwapSelectToken({ handleToken, token }: SwapSelectTokenProps) {
+export function SwapSelectToken({ handleToken, token, chevron }: SwapSelectTokenProps) {
   const [open, setOpen] = useState(false)
   const [search, setSearch] = useState('')
   const [filteredTokens, setFilteredTokens] = useState<Token[]>([])
@@ -55,7 +58,7 @@ export function SwapSelectToken({ handleToken, token }: SwapSelectTokenProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="rounded-sm">
+        <Button variant="outline" className="rounded-sm w-full">
           {token ? (
             <div className="flex items-center gap-2">
               <img
@@ -66,14 +69,17 @@ export function SwapSelectToken({ handleToken, token }: SwapSelectTokenProps) {
                 className="rounded-full bg-white"
               />
               <p>{token.name}</p>
-              <ChevronDown />
+              {chevron ? chevron : <ChevronDown />}
             </div>
           ) : (
             'Select a token'
           )}
         </Button>
       </DialogTrigger>
-      <DialogContent className="gap-0 overflow-hidden border-none p-0 sm:max-w-[350px]">
+      <DialogContent
+        onOpenAutoFocus={(e) => {e.preventDefault()}}
+        className="gap-0 overflow-hidden border-none p-0 sm:max-w-[350px]"
+      >
         <DialogHeader className="flex flex-col gap-4 p-4">
           <DialogTitle>Select a token</DialogTitle>
           <Input
@@ -105,7 +111,11 @@ export function SwapSelectToken({ handleToken, token }: SwapSelectTokenProps) {
                       whileTap={{ scale: 0.98 }}
                     >
                       <img
-                        src={token.logoURI.includes('https://') ? token.logoURI : ''}
+                        src={
+                          token.logoURI.includes('https://')
+                            ? token.logoURI
+                            : ''
+                        }
                         alt={token.name}
                         width={30}
                         height={30}

@@ -5,22 +5,28 @@ import NextLink from 'next/link'
 import { siteConfig } from '@/src/app/config/site'
 import { Button } from '../shared/shadcn/components/ui/button'
 import { Card } from '../shared/shadcn/components/ui/card'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { BadgeCheck, Menu, X } from 'lucide-react'
 import { LogoIcon } from '../shared/icons'
 import { useWeb3Modal, useWeb3ModalAccount } from '@web3modal/ethers/react'
+import { usePathname } from 'next/navigation'
 
 export const Header = () => {
   const [open, setOpen] = useState(false)
   const { open: connectWeb3 } = useWeb3Modal()
   const web3 = useWeb3ModalAccount()
+  const pathname = usePathname()
 
   const handleConnect = async () => {
     await connectWeb3()
   }
 
-  console.table(web3) 
+  console.table(web3)
+
+  useEffect(() => {
+    setOpen(false)
+  }, [pathname])
 
   return (
     <>
@@ -38,7 +44,11 @@ export const Header = () => {
 
             <nav className="hidden md:flex space-x-4">
               {siteConfig.navItems.map((item) => (
-                <NextLink key={item.href} href={item.href} className={clsx('text-sm font-medium')}>
+                <NextLink
+                  key={item.href}
+                  href={item.href}
+                  className={clsx('text-sm font-medium')}
+                >
                   {item.label}
                 </NextLink>
               ))}
@@ -72,44 +82,48 @@ export const Header = () => {
             </Button>
           </div>
         </div>
-        <motion.div
-          animate={{
-            height: open ? 'auto' : 0,
-            paddingBottom: open ? 10 : 0,
-          }}
-          initial={{
-            height: 0,
-            paddingBottom: 0,
-          }}
-          exit={{
-            height: 0,
-            paddingBottom: 0,
-          }}
-          transition={{
-            duration: 0.3,
-          }}
-        >
-          <div className="flex flex-col space-y-2 px-4 py-2 md:hidden">
-            {siteConfig.navMenuItems.map((item, index) => {
-              return (
-                <motion.div
-                  animate={{ opacity: open ? 1 : 0 }}
-                  initial={{ opacity: 0 }}
-                  exit={{ opacity: 0 }}
-                  transition={{
-                    duration: 0.1,
-                    delay: open ? index * 0.05 : item.removeOrder * 0.05,
-                  }}
-                  key={`${item.href}-${index}`}
-                >
-                  <NextLink href={item.href} className="block text-md font-medium">
-                    {item.label}
-                  </NextLink>
-                </motion.div>
-              )
-            })}
-          </div>
-        </motion.div>
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              animate={{
+                height: open ? 'auto' : 0,
+              }}
+              initial={{
+                height: 0,
+              }}
+              exit={{
+                height: 0,
+              }}
+              transition={{
+                duration: 0.3,
+              }}
+            >
+              <div className="flex flex-col space-y-2 px-4 py-2 md:hidden">
+                {siteConfig.navMenuItems.map((item, index) => {
+                  return (
+                    <motion.div
+                      animate={{ opacity: open ? 1 : 0 }}
+                      initial={{ opacity: 0 }}
+                      exit={{ opacity: 0 }}
+                      transition={{
+                        duration: 0.1,
+                        delay: open ? index * 0.05 : item.removeOrder * 0.05,
+                      }}
+                      key={`${item.href}-${index}`}
+                    >
+                      <NextLink
+                        href={item.href}
+                        className="block text-md font-medium"
+                      >
+                        {item.label}
+                      </NextLink>
+                    </motion.div>
+                  )
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </Card>
     </>
   )
