@@ -1,7 +1,6 @@
 'use client'
 
 import clsx from 'clsx'
-import NextLink from 'next/link'
 import { siteConfig } from '@/src/app/config/site'
 import { Button } from '../shared/shadcn/components/ui/button'
 import { Card } from '../shared/shadcn/components/ui/card'
@@ -11,6 +10,7 @@ import { BadgeCheck, Menu, X } from 'lucide-react'
 import { LogoIcon } from '../shared/icons'
 import { useWeb3Modal, useWeb3ModalAccount } from '@web3modal/ethers/react'
 import { usePathname } from 'next/navigation'
+import Link from 'next/link'
 
 export const Header = () => {
   const [open, setOpen] = useState(false)
@@ -34,23 +34,23 @@ export const Header = () => {
         <div className="container flex mx-auto items-center justify-between px-4 py-3 w-full">
           <div className="flex gap-10 items-center">
             <div className="flex items-center">
-              <NextLink href="/" className="flex items-center gap-2">
+              <Link href="/" className="flex items-center gap-2">
                 <div className="flex items-center gap-2">
                   <LogoIcon width="28" height="28" />
                   <p className="text-lg font-bold">BambaSwap</p>
                 </div>
-              </NextLink>
+              </Link>
             </div>
 
             <nav className="hidden md:flex space-x-4">
               {siteConfig.navItems.map((item) => (
-                <NextLink
+                <Link
                   key={item.href}
                   href={item.href}
                   className={clsx('text-sm font-medium')}
                 >
                   {item.label}
-                </NextLink>
+                </Link>
               ))}
             </nav>
           </div>
@@ -97,27 +97,23 @@ export const Header = () => {
               transition={{
                 duration: 0.3,
               }}
+              className="overflow-hidden"
             >
-              <div className="flex flex-col space-y-2 px-4 py-2 md:hidden">
+              <div className="flex flex-col space-y-2 px-4 py-2 md:hidden items-start pb-4">
                 {siteConfig.navMenuItems.map((item, index) => {
                   return (
-                    <motion.div
-                      animate={{ opacity: open ? 1 : 0 }}
-                      initial={{ opacity: 0 }}
-                      exit={{ opacity: 0 }}
-                      transition={{
-                        duration: 0.1,
-                        delay: open ? index * 0.05 : item.removeOrder * 0.05,
-                      }}
+                    <Button
                       key={`${item.href}-${index}`}
+                      variant="link"
+                      className="text-white !p-0 h-[initial]"
                     >
-                      <NextLink
+                      <Link
                         href={item.href}
                         className="block text-md font-medium"
                       >
                         {item.label}
-                      </NextLink>
-                    </motion.div>
+                      </Link>
+                    </Button>
                   )
                 })}
               </div>
